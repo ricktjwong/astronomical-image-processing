@@ -1,5 +1,9 @@
-# rtw16 and drs16
-# v1.0
+##################################################
+## Author: Rick Wong and Daniel Seah
+## Version: 1.0.0
+## Maintainer: ricktjwong and danielsrq
+## Email: rtw16@ic.ac.uk and drs16@ic.ac.uk
+##################################################
 
 from astropy.io import fits
 import matplotlib.pyplot as plt
@@ -30,10 +34,20 @@ def get_brightest(nparray):
             max = i
     return max
 
+
 def smooth(y, box_pts):
     box = np.ones(box_pts) / box_pts
     y_smooth = np.convolve(y, box, mode='same')
     return y_smooth
+
+def mask(data, threshold=30000):
+    c = len(data[0])
+    r = len(data)
+    for j in range(c):
+        for i in range(r):
+            if data[i][j] > threshold:
+                data[i][j] = 0.
+                
 
 x = np.array([[1,1,1,1,1], [1,1,1,1,2]])
 
@@ -48,7 +62,7 @@ data_flatten = data.flatten()
 one_row = data[3211]
 smoothened_row = smooth(one_row, 10)
 x_array = [i for i in range(len(data[0]))]
-#plt.plot(x_array, one_row)
+plt.plot(x_array, one_row)
 #plt.plot(x_array, smooth(one_row, 1))
 #plt.plot(x_array, smooth(one_row, 5))
 #plt.plot(x_array, smoothened_row)
@@ -69,3 +83,7 @@ gaussian_fit2 = G(x, 2459, sigma) * area1/area2
 
 plt.plot(x, candidate_gaussian)
 plt.plot(x, gaussian_fit2)
+
+mask(data)
+x_array = [i for i in range(len(data[0]))]
+plt.plot(x_array, one_row)
