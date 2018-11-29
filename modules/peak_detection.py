@@ -17,9 +17,9 @@ blobs_log = blob_log(img, max_sigma=30, num_sigma=10, threshold=.01)
 # Compute radii in the 3rd column.
 blobs_log[:, 2] = blobs_log[:, 2] * sqrt(2)
 
-fig, ax = plt.subplots(1, 1, figsize=(5, 3), sharex=True, sharey=True)
+fig, ax = plt.subplots()
 #coords_radius = []
-
+#
 for blob in blobs_log:
     ax.set_title("LOG")
     ax.imshow(img, interpolation='nearest')
