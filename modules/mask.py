@@ -34,3 +34,22 @@ mask(data, [1434, 1445], [4315, 4611])  # top higher rectangle
 mask(data, [1425, 1458], [1977, 2990])  # bottom higher rectangle
 mask(data, [1430, 1444], [0, 1977])     # top lower rectangle
 
+def mask_rect(array, x1, x2, y1, y2):
+    for i in range(y1,y2 + 1):
+        for j in range(x1,x2 + 1):
+            array[i][j] = 0
+            
+    return array
+    
+    
+def mask_circle(array, centre , radius):
+    max_y, min_y = centre[1] + radius, centre[1] - radius
+    max_x, min_x = centre[0] + radius, centre[0] - radius
+    length = len(array)
+    
+    for i in range(min_y,max_y + 1):
+        for j in range(min_x, max_x + 1):
+            if ( (i - centre[1]) **2  + (j - centre[0])**2 ) <= (radius * radius):
+                array[length - i - 1][j] = 0
+                
+    return array   
