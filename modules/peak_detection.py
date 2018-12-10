@@ -10,8 +10,8 @@ from skimage.feature import blob_dog, blob_log, blob_doh
 import matplotlib.pyplot as plt
 
 
-def find_peaks(data):
-    blobs_log = blob_log(data, min_sigma=5, max_sigma=30, num_sigma=10, threshold=.01)
+def find_peaks(data, t):
+    blobs_log = blob_log(data, min_sigma=4, max_sigma=30, num_sigma=27, threshold=t)
     # Compute radii in the 3rd column.
     blobs_log[:, 2] = blobs_log[:, 2] * sqrt(2)
     return blobs_log

@@ -10,14 +10,23 @@ from math import sqrt
 from skimage.feature import blob_dog, blob_log, blob_doh
 from astropy.io import fits
 import matplotlib.pyplot as plt
+import mask as mk
 
 hdulist = fits.open("../data/mosaic.fits")
 data = hdulist[0].data
 
+data = data - 3421
+
+for i in mk.CIRCLES:
+    data = mk.mask_circle(data, i[0], i[1])
+
+for i in mk.RECTS:
+    data = mk.mask_rect(data, i)
+
 image = data
 image_gray = data
 
-blobs_log = blob_log(image_gray, max_sigma=30, num_sigma=10, threshold=.001)
+blobs_log = blob_log(image_gray, max_sigma=30, num_sigma=10, threshold=.01)
 
 # Compute radii in the 3rd column.
 blobs_log[:, 2] = blobs_log[:, 2] * sqrt(2)
