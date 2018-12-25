@@ -20,7 +20,7 @@ data = data.astype(np.float64)
 
 plt.imshow(data)
 
-peaks = pk.find_peaks(data)
+peaks = pk.find_peaks(data, 15)
 
 rm_indices = []
 for i in range(len(peaks)):

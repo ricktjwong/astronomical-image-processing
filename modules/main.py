@@ -60,13 +60,13 @@ plt.imshow(section)
 #    I = [sp.I(i, I_e, int(r_h), j) for i in x]
 #    plt.plot(x, I, "--")
 
-#peaks = pk.find_peaks(section, 15)
+peaks = pk.find_peaks(section, 5)
 #y = peaks[:,0]
 #x = peaks[:,1]
 #plt.scatter(x, y, s=2, c='r')
 
-peaks = np.loadtxt("peaks.txt")
-print(len(peaks))
+#peaks = np.loadtxt("../data/peaks.txt")
+#print(len(peaks))
 #y = peaks[:,0]
 #x = peaks[:,1]
 #plt.scatter(x, y, s=2, c='r')
