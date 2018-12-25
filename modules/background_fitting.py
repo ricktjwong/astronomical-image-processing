@@ -8,13 +8,11 @@
 from astropy.io import fits
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.optimize import curve_fit
 
-import sersic_profile as sp
-import mask as mk
-import process as ps
-
-hdulist = fits.open("../data/mosaic.fits")
+hdulist = fits.open("../data/masked.fits")
 data = hdulist[0].data
+
 
 # Define model function to be used to fit to the data above:
 def gauss(x,*p):
@@ -29,19 +27,13 @@ def removeHighValues(data):
         else:
             new_data[i] = data[i]
     return new_data            
-    
-for i in mk.CIRCLES:
-    data = mk.mask_circle(data, i[0], i[1])
-
-for i in mk.RECTS:
-    data = mk.mask_rect(data, i)
 
 plt.figure(1, figsize = (6,8))
 plt.imshow(data)
 plt.show()
                  
 noise_data = data.flatten()
-bins = np.linspace(3200,3700,100)
+bins = np.linspace(3200, 3700, 100)
 
 plt.figure()
 hist = plt.hist(noise_data, bins, None, True)
@@ -49,5 +41,5 @@ plt.show()
 counts, intensity_bins = hist[0], hist[1]
 bin_centre = (intensity_bins[:-1] + intensity_bins[1:])/2
 
-p0 = [ 3421, 10]
+p0 = [3421, 10]
 coeff, var_matrix = curve_fit(gauss, bin_centre, counts, p0=p0)
