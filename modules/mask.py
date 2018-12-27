@@ -13,11 +13,11 @@ hdulist = fits.open("../data/mosaic.fits")
 data = hdulist[0].data
 data = data.astype(np.float64)
 
-"""
-Manually mask the bright image
-"""
 
 def mask_rect(data, coords):
+    """
+    Rectangular masks for CCD bleeding
+    """
     x1, x2, y1, y2 = coords[0], coords[1], coords[2], coords[3]
     for i in data[y1:y2]:
         i[x1:x2] = [0 for j in i[x1:x2]]
@@ -25,6 +25,9 @@ def mask_rect(data, coords):
 
 
 def mask_circle(data, centre, radius):
+    """
+    Circular masks for centre of bright stars
+    """    
     max_y, min_y = centre[1] + radius, centre[1] - radius
     max_x, min_x = centre[0] + radius, centre[0] - radius    
     for i in range(min_y, max_y + 1):
@@ -35,6 +38,9 @@ def mask_circle(data, centre, radius):
 
 
 def save_to_fits(data):
+    """
+    General function to save edited image to new fits file
+    """
     hdu = fits.PrimaryHDU(data)
     hdul = fits.HDUList([hdu])
     hdul.writeto('masked.fits')
@@ -65,4 +71,3 @@ for i in RECTS:
 masked = np.ma.masked_where(data < 10, data)
 plt.figure()
 plt.imshow(masked)
-#save_to_fits(data)

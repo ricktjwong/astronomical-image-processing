@@ -1,20 +1,15 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Dec 13 14:27:33 2018
+##################################################
+## Author: Rick Wong and Daniel Seah
+## Version: 1.0.1
+## Maintainers: ricktjwong and danielsrq
+## Email: rtw16@ic.ac.uk and drs16@ic.ac.uk
+## Description: Peak detection algorithm which
+## makes use of a variable 2D square aperture
+##################################################
 
-@author: ricktjwong
-"""
-
-from astropy.io import fits
-import matplotlib.pyplot as plt
 import numpy as np
 
 z = 25.3
-
-hdulist = fits.open("../data/masked.fits")
-data = hdulist[0].data
-data = data.astype(np.float64)
 
 class GalaxyCount:
     def __init__(self, data, threshold):
@@ -78,8 +73,6 @@ class GalaxyCount:
         if self.box_x1 < 1 or self.box_x2 > self.cols - 1 or self.box_y1 < 1 \
         or self.box_y2 > self.rows - 1:
             self.data[self.max_idx_r][self.max_idx_c] = 0
-            self.get_brightest()
-            self.n += 1
         # If the aperture is within range of the image data, build catalogue
         else:
             update_data = self.build_catalogue().copy()
@@ -94,10 +87,12 @@ class GalaxyCount:
             self.data = update_data.copy()
             # Only accept a galaxy if it spans at least 15 pixels in area
             if len(self.galaxy_intensity) > 15:
-                self.galactic_intensities += [sum(self.galaxy_intensity)]
-                self.background_intensities += [np.mean(self.background_intensity)]
+                self.galactic_intensities += \
+                [sum(np.array(self.galaxy_intensity) -
+                     np.mean(self.background_intensity))]
+                self.background_intensities += \
+                [np.mean(self.background_intensity)]
                 self.centres.append([self.max_idx_c, self.max_idx_r, self.r])
-            self.n += 1
 
     def count_galaxies(self):
         """
@@ -107,10 +102,16 @@ class GalaxyCount:
         self.galactic_intensities = []
         self.background_intensities = []
         #while (max_flattened != 0):
-        while (self.n < 5000):
+        while (True):
             # Reset aperture radius to 5
             self.r = 5
             # Get new brightest soot in the image
             self.get_brightest()
+            if self.data[self.max_idx_r][self.max_idx_c] < self.threshold:
+                break
+            if self.n % 1000 == 0:
+                print(self.n)
+                print(self.data[self.max_idx_r][self.max_idx_c])
             # Do checks and build catalogue
             self.get_catalogue()
+            self.n += 1

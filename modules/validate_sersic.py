@@ -1,17 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Dec  3 10:40:45 2018
-
-@author: ricktjwong
-"""
+##################################################
+## Author: Rick Wong and Daniel Seah
+## Version: 1.0.0
+## Maintainers: ricktjwong and danielsrq
+## Email: rtw16@ic.ac.uk and drs16@ic.ac.uk
+## Description: Validate that galaxies have an
+## intensity distribution well modelled by the
+## Sersic profile using an actual galaxy from DR12
+##################################################
 
 from astropy.io import fits
 from astropy.wcs import WCS
 import matplotlib.pyplot as plt
-
 import sersic_profile as sp
-import peak_detection as pk
 
 hdulist = fits.open("../data/dr12.fits")
 data = hdulist[0].data
@@ -19,7 +19,7 @@ plt.figure(1)
 plt.imshow(data)
 
 """
-Galaxy 1
+Galaxy from SDSS DR12
 """
 
 w = WCS("../data/dr12.fits")

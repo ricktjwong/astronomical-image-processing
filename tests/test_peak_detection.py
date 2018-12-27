@@ -1,19 +1,23 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 25 16:29:17 2018
-
-@author: ricktjwong
-"""
+##################################################
+## Author: Rick Wong and Daniel Seah
+## Version: 1.0.1
+## Maintainers: ricktjwong and danielsrq
+## Email: rtw16@ic.ac.uk and drs16@ic.ac.uk
+## Description: Unit tests of peak detection algo
+## on single galaxies and galaxies of various
+## shapes, as well as a small section of the data
+##################################################
 
 import sys
 sys.path.append("../")
 import numpy as np
 from astropy.io import fits
 import matplotlib.pyplot as plt
+import utils.plot as pt
 import modules.peak_detection as pk
+import time
 
-hdulist = fits.open("../data/masked.fits")
+hdulist = fits.open("../data/fits/masked.fits")
 data = hdulist[0].data
 data = data.astype(np.float64)
 
@@ -63,30 +67,45 @@ def test_single_symmetric_small_galaxy():
 
 
 def test_small_section(data):
-    data = data[101:301, 101:301]
+    data = data[901:1101, 901:1101]
+#    data = data[3200:3230, 2445:2475]
+#    data = data[101:301, 101:301]
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     plt.imshow(data)
-    galaxy_count = pk.GalaxyCount(data, 3485)
+    galaxy_count = pk.GalaxyCount(data, 3482)
     galaxy_count.count_galaxies()
     assert(len(galaxy_count.background_intensities) == 10)
     assert(len(galaxy_count.galactic_intensities) == 10)
     print(len(galaxy_count.background_intensities))
+    print(galaxy_count.galactic_intensities)
     print(len(galaxy_count.galactic_intensities))
     print(galaxy_count.centres)    
     centres = np.array(galaxy_count.centres)
-    plt.scatter(centres[:,0], centres[:,1], c='r', s=5)
-    for i in range(len(centres)):
-        circle = plt.Circle((centres[i][0], centres[i][1]), centres[i][2],
-                            color='r',  fill=False)
-        ax.add_artist(circle)
+    pt.mark_detected_objects(centres, ax)
+    plt.xticks(np.arange(0, 200, 25))
+    plt.yticks(np.arange(0, 200, 25))
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     plt.imshow(galaxy_count.data)
-    for i in range(len(centres)):
-        circle = plt.Circle((centres[i][0], centres[i][1]), centres[i][2],
-                            color='r',  fill=False)
-        ax.add_artist(circle)
-    plt.scatter(centres[:,0], centres[:,1], c='r', s=5)
+    pt.mark_detected_objects(centres, ax)
+    plt.xticks(np.arange(0, 200, 25))
+    plt.yticks(np.arange(0, 200, 25)) 
 
-test_small_section(data)
+#test_small_section(data)
+
+# mu, sigma = 3418.5636925, 12.58387389
+# 5 sigma - 3482
+# 3 sigma - 3456
+
+plt.figure()
+plt.imshow(data)
+start = time.time()
+galaxy_count = pk.GalaxyCount(data, 3482)
+galaxy_count.count_galaxies()
+end = time.time()
+print(end - start)
+print(len(galaxy_count.background_intensities))
+print(len(galaxy_count.galactic_intensities))
+plt.figure()
+plt.imshow(galaxy_count.data)
