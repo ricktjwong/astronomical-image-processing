@@ -18,10 +18,10 @@ hdulist = fits.open("../data/fits/masked.fits")
 data = hdulist[0].data
 data = data.astype(np.float64)
 
-centres = np.load("../data/detection/centres_12.npy")
-galactic_intensities = np.load("../data/detection/galactic_intensities_12.npy")
-background_intensities = np.load("../data/detection/background_intensities_12.npy")
-img_data = np.load('../data/detection/final_img_12.npy')
+centres = np.load("../data/detection_sweep/centres_4sigma.npy")
+galactic_intensities = np.load("../data/detection_sweep/galactic_intensities_4sigma.npy")
+background_intensities = np.load("../data/detection_sweep/background_intensities_4sigma.npy")
+img_data = np.load('../data/detection_sweep/final_img_4sigma.npy')
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
@@ -45,3 +45,7 @@ x = np.linspace(m.min(), m.max())
 y = [filter_m(m, i) for i in x]
 plt.figure()
 plt.plot(x, np.log10(y))
+
+y2 = [y[i] - y[i-1] for i in range(1, len(y))]
+plt.figure()
+plt.plot(x[1:], y2)

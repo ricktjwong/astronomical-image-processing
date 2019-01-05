@@ -49,17 +49,14 @@ class GalaxyCount:
         background or galaxy list
         """
         update_data = self.data.copy()
-        # Reset the individual galaxy and corresponding background list
-        self.background_intensity = []
-        self.galaxy_intensity = []
-        for i in range(self.box_y1, self.box_y2 + 1):
-            for j in range(self.box_x1, self.box_x2 + 1):
-                if update_data[i][j] < self.threshold:
-                    self.background_intensity.append(update_data[i][j])
-                else:
-                    self.galaxy_intensity.append(update_data[i][j])
-                    # Mask the pixel if it is accepted as a galactic point
-                    update_data[i][j] = 0
+        box_aperture = update_data[self.box_y1:self.box_y2 + 1,
+                                   self.box_x1:self.box_x2 + 1]
+        self.background_intensity = box_aperture[box_aperture <
+                                                 self.threshold].copy()
+        self.galaxy_intensity = box_aperture[box_aperture >=
+                                             self.threshold].copy()
+        # Mask the pixels if they are accepted as a galactic point
+        box_aperture[box_aperture >= self.threshold] = 0
         return update_data
 
     def get_catalogue(self):
@@ -102,7 +99,7 @@ class GalaxyCount:
         self.galactic_intensities = []
         self.background_intensities = []
         #while (max_flattened != 0):
-        while (True):
+        while(True):
             # Reset aperture radius to 5
             self.r = 5
             # Get new brightest soot in the image

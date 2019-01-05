@@ -17,6 +17,13 @@ import utils.plot as pt
 import modules.peak_detection as pk
 import time
 
+plt.rcParams["font.family"] = "Times New Roman"
+plt.rcParams["font.size"] = 16
+plt.rcParams['lines.linewidth'] = 2
+plt.rcParams['figure.figsize'] = 5, 5
+plt.rcParams.update({'figure.autolayout': True})
+plt.rcParams['mathtext.default'] = 'regular'
+
 hdulist = fits.open("../data/fits/masked.fits")
 data = hdulist[0].data
 data = data.astype(np.float64)
@@ -85,27 +92,53 @@ def test_small_section(data):
     pt.mark_detected_objects(centres, ax)
     plt.xticks(np.arange(0, 200, 25))
     plt.yticks(np.arange(0, 200, 25))
+    plt.savefig("unmasked.pdf", dpi=3000)    
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     plt.imshow(galaxy_count.data)
     pt.mark_detected_objects(centres, ax)
     plt.xticks(np.arange(0, 200, 25))
     plt.yticks(np.arange(0, 200, 25)) 
+    plt.savefig("masked.pdf", dpi=3000)    
 
-#test_small_section(data)
+start = time.time()
+test_small_section(data)
+end = time.time()
+print("time: ")
+print(end - start)
 
 # mu, sigma = 3418.5636925, 12.58387389
 # 5 sigma - 3482
 # 3 sigma - 3456
 
-plt.figure()
-plt.imshow(data)
-start = time.time()
-galaxy_count = pk.GalaxyCount(data, 3482)
-galaxy_count.count_galaxies()
-end = time.time()
-print(end - start)
-print(len(galaxy_count.background_intensities))
-print(len(galaxy_count.galactic_intensities))
-plt.figure()
-plt.imshow(galaxy_count.data)
+#mu, sigma = 3418.5636925, 12.58387389
+#import math
+
+#for i in range(1, 11):
+#    start = time.time()
+#    threshold = math.ceil(mu + i * sigma)
+#    galaxy_count = pk.GalaxyCount(data,threshold)
+#    galaxy_count.count_galaxies()
+#    end = time.time()
+#    print("time: ")
+#    print(end - start)
+#    print(len(galaxy_count.background_intensities))
+#    print(len(galaxy_count.galactic_intensities))
+#    np.save("centres_"+str(i)+"sigma", galaxy_count.centres)
+#    np.save("background_intensities_"+str(i)+"sigma", galaxy_count.background_intensities)
+#    np.save("galactic_intensities_"+str(i)+"sigma", galaxy_count.galactic_intensities)
+#    np.save("final_img_"+str(i)+"sigma", galaxy_count.data)
+
+#plt.figure()
+#plt.imshow(data)
+#start = time.time()
+#galaxy_count = pk.GalaxyCount(data, 3482)
+#galaxy_count.count_galaxies()
+#end = time.time()
+#print("time: ")
+#print(end - start)
+#print(len(galaxy_count.background_intensities))
+#print(len(galaxy_count.galactic_intensities))
+#plt.figure()
+#plt.imshow(galaxy_count.data)
+

@@ -1,8 +1,10 @@
 ##################################################
 ## Author: Rick Wong and Daniel Seah
-## Version: 1.0.0
-## Maintainer: ricktjwong and danielsrq
+## Version: 1.0.1
+## Maintainers: ricktjwong and danielsrq
 ## Email: rtw16@ic.ac.uk and drs16@ic.ac.uk
+## Description: Background fitting with a Gaussian
+## distribution
 ##################################################
 
 from astropy.io import fits
@@ -10,14 +12,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 
-hdulist = fits.open("../data/masked.fits")
+plt.rcParams["font.family"] = "Times New Roman"
+plt.rcParams["font.size"] = 16
+plt.rcParams['lines.linewidth'] = 2
+plt.rcParams['figure.figsize'] = 8, 5
+plt.rcParams.update({'figure.autolayout': True})
+plt.rcParams['mathtext.default'] = 'regular'
+
+hdulist = fits.open("../data/fits/masked.fits")
 data = hdulist[0].data
 
 
-# Define model function to be used to fit to the data above:
-def gauss(x,*p):
-    mu , sigma = p
-    return (1/(sigma*np.sqrt(2*np.pi)) * np.exp(-(x-mu)**2/(2.*sigma**2)))
+def gauss(x, *p):
+    """
+    Gaussian function to fit to data
+    """
+    mu, sigma = p
+    return (1 / (sigma * np.sqrt(2 * np.pi)) *
+            np.exp(-(x - mu) ** 2 / (2. * sigma ** 2)))
+
+#new_data = list(filter(lambda x: x < 5000, data))
 
 def removeHighValues(data):
     new_data = np.zeros(data.shape)
@@ -26,20 +40,21 @@ def removeHighValues(data):
             new_data[i] = 0
         else:
             new_data[i] = data[i]
-    return new_data            
+    return new_data
 
-plt.figure(1, figsize = (6,8))
-plt.imshow(data)
-plt.show()
-                 
+
 noise_data = data.flatten()
-bins = np.linspace(3200, 3700, 100)
+bins = np.linspace(3200, 3700, 500)
 
 plt.figure()
-hist = plt.hist(noise_data, bins, None, True)
-plt.show()
+hist = plt.hist(noise_data, bins, None, True, color='b', edgecolor='black')
 counts, intensity_bins = hist[0], hist[1]
-bin_centre = (intensity_bins[:-1] + intensity_bins[1:])/2
+bin_centre = (intensity_bins[:-1] + intensity_bins[1:]) / 2
 
 p0 = [3421, 10]
 coeff, var_matrix = curve_fit(gauss, bin_centre, counts, p0=p0)
+plt.plot(bins, gauss(bins, *coeff), 'r--')
+plt.xlim([3350, 3550])
+print(coeff, var_matrix)
+print("Error: ")
+print(np.sqrt(np.diag(var_matrix)))
