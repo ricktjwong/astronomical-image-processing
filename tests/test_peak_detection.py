@@ -92,14 +92,13 @@ def test_small_section(data):
     pt.mark_detected_objects(centres, ax)
     plt.xticks(np.arange(0, 200, 25))
     plt.yticks(np.arange(0, 200, 25))
-    plt.savefig("unmasked.pdf", dpi=3000)    
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     plt.imshow(galaxy_count.data)
     pt.mark_detected_objects(centres, ax)
     plt.xticks(np.arange(0, 200, 25))
-    plt.yticks(np.arange(0, 200, 25)) 
-    plt.savefig("masked.pdf", dpi=3000)    
+    plt.yticks(np.arange(0, 200, 25))     
+
 
 start = time.time()
 test_small_section(data)
