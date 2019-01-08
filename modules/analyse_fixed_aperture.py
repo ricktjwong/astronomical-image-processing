@@ -35,7 +35,8 @@ data = data.astype(np.float64)
 mu, sigma = 3418.5636925, 12.58387389
 
 z = 25.3
-r = [5, 6, 7, 8, 9, 10]
+r = [5, 10]
+c = ['r', 'b']
 plt.rcParams['figure.figsize'] = 7, 5
 plt.figure()
 for i in range(len(r)):
@@ -63,10 +64,10 @@ for i in range(len(r)):
                  yerr=w, linestyle="None", color='grey', linewidth=0.5)
     plt.errorbar(x, np.log10(y),
                  xerr=wx, linestyle="None", color='grey', linewidth=0.5)    
-    plt.plot(x[start_idx:end_idx], y_fit, '-', linewidth=1.5)
-    plt.scatter(x, np.log10(y), marker='.', s=15)
+    plt.plot(x[start_idx:end_idx], y_fit, '-', linewidth=1.5, c=c[i])
+    plt.scatter(x, np.log10(y), marker='.', s=15, c=c[i])
     print(len(centres))
-    print("m1: ")
+    print("m" + str(i) + ": ")
     print(m)
     print("error: ")
-    print(cov)
+    print(cov[0][0])

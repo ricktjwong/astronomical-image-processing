@@ -65,7 +65,7 @@ n_opt, sersic_cov = sersic_fit(Ie, Re, I_surface, range(0, r+1), 1)             
 
 I = [sp.I(i, I_e, int(r_h), n_opt) for i in x]
 plt.plot(x, I, "--", c='r')
-plt.savefig("validate_sersic.pdf", dpi=3000)
+#plt.savefig("validate_sersic.pdf", dpi=3000)
 
 """
 Star

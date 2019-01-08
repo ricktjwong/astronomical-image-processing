@@ -29,7 +29,7 @@ def circle_intensity(array, centre, radius):
 def half_light_radius(array, centre, full_radius, total_intensity):
     half_intensity = total_intensity * 0.5
     previous_intensity = 0
-    for i in range(1,full_radius):
+    for i in range(1, full_radius):
         current_intensity = circle_intensity(array, centre, i)[0]
         if current_intensity >= half_intensity:
             correction = (current_intensity - half_intensity) / (current_intensity - previous_intensity)    # Linear correction

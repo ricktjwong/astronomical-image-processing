@@ -50,7 +50,7 @@ def sweep_variable_aperture():
     for i in range(3, 4):
         start = time.time()
         threshold = math.ceil(mu + i * sigma)
-        galaxy_count = pk.GalaxyCount(data, threshold, initial_r=6)
+        galaxy_count = pk.GalaxyCount(data, threshold, initial_r=5)
         galaxy_count.count_galaxies()
         end = time.time()
         print("time: ")
@@ -61,3 +61,5 @@ def sweep_variable_aperture():
         np.save("background_intensities_"+str(i)+"sigma", galaxy_count.background_intensities)
         np.save("galactic_intensities_"+str(i)+"sigma", galaxy_count.galactic_intensities)
         np.save("final_img_"+str(i)+"sigma", galaxy_count.data)
+
+sweep_variable_aperture()
