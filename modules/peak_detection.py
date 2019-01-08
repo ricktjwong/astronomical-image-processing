@@ -12,12 +12,16 @@ import numpy as np
 z = 25.3
 
 class GalaxyCount:
-    def __init__(self, data, threshold):
+    def __init__(self, data, threshold, initial_r=5, aperture_type="variable"):
         self.data = data
         self.rows = data.shape[0]
-        self.cols = data.shape[1]
-        # Set threshold as 5 standard deviations away from mean background
+        self.cols = data.shape[1]        
+        # Set threshold as n standard deviations away from mean background
         self.threshold = threshold
+        self.initial_r = initial_r
+        self.aperture_type = aperture_type
+        # Only accept a galaxy if it spans at least 15 pixels in area
+        self.area_acceptance = 15
         # Stores the total intensity of galaxies of radius >= 5 pixels
         self.galactic_intensities = []
         # Stores the mean intensity of background corresponding to the region
@@ -75,20 +79,23 @@ class GalaxyCount:
             update_data = self.build_catalogue().copy()
             # If the length of background intensity is < galaxy pixels,
             # increase the radius by 1 pixel and continue appending
-            while len(self.background_intensity) < len(self.galaxy_intensity):
-                self.r += 1
-                # Set the aperture based on new radius
-                self.set_aperture()
-                # Build catalog based on new aperture
-                update_data = self.build_catalogue().copy()
+            if self.aperture_type == "variable":
+                while len(self.background_intensity) < len(self.galaxy_intensity) \
+                and len(self.galaxy_intensity) - len(self.background_intensity) != 1:
+                    self.r += 1
+                    # Set the aperture based on new radius
+                    self.set_aperture()
+                    # Build catalog based on new aperture
+                    update_data = self.build_catalogue().copy()
             self.data = update_data.copy()
-            # Only accept a galaxy if it spans at least 15 pixels in area
-            if len(self.galaxy_intensity) > 15:
+            if len(self.galaxy_intensity) >= self.area_acceptance:
+                if self.aperture_type == "variable":
+                    background_mean = np.mean(self.background_intensity)
+                else:
+                    background_mean = 3418.5636925
                 self.galactic_intensities += \
-                [sum(np.array(self.galaxy_intensity) -
-                     np.mean(self.background_intensity))]
-                self.background_intensities += \
-                [np.mean(self.background_intensity)]
+                [sum(np.array(self.galaxy_intensity) - background_mean)]
+                self.background_intensities += [background_mean]
                 self.centres.append([self.max_idx_c, self.max_idx_r, self.r])
 
     def count_galaxies(self):
@@ -100,8 +107,8 @@ class GalaxyCount:
         self.background_intensities = []
         #while (max_flattened != 0):
         while(True):
-            # Reset aperture radius to 5
-            self.r = 5
+            # Reset aperture radius to initial start radius
+            self.r = self.initial_r
             # Get new brightest soot in the image
             self.get_brightest()
             if self.data[self.max_idx_r][self.max_idx_c] < self.threshold:

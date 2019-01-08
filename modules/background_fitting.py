@@ -44,7 +44,7 @@ def removeHighValues(data):
 
 
 noise_data = data.flatten()
-bins = np.linspace(3200, 3700, 500)
+bins = np.linspace(3200, 3700, 501)
 
 plt.figure()
 hist = plt.hist(noise_data, bins, None, True, color='b', edgecolor='black')
@@ -54,6 +54,20 @@ bin_centre = (intensity_bins[:-1] + intensity_bins[1:]) / 2
 p0 = [3421, 10]
 coeff, var_matrix = curve_fit(gauss, bin_centre, counts, p0=p0)
 plt.plot(bins, gauss(bins, *coeff), 'r--')
+
+new_counts = np.zeros(435)
+new_counts[0:218] = counts[0:218]
+new_counts[218:] = counts[0:217][::-1]
+
+new_intensity_bins = intensity_bins[0:436]
+counts = new_counts
+intensity_bins = new_intensity_bins
+bin_centre = (intensity_bins[:-1] + intensity_bins[1:]) / 2
+
+p0 = [3421, 10]
+coeff, var_matrix = curve_fit(gauss, bin_centre, counts, p0=p0)
+plt.plot(bins, gauss(bins, *coeff), 'g--')
+
 plt.xlim([3350, 3550])
 print(coeff, var_matrix)
 print("Error: ")

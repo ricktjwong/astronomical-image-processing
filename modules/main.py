@@ -12,7 +12,7 @@ import sersic_profile as sp
 
 z = 25.3
 
-hdulist = fits.open("../data/masked.fits")
+hdulist = fits.open("../data/fits/masked.fits")
 data = hdulist[0].data
 data = data.astype(np.float64)
 

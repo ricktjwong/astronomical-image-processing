@@ -106,28 +106,8 @@ end = time.time()
 print("time: ")
 print(end - start)
 
-# mu, sigma = 3418.5636925, 12.58387389
-# 5 sigma - 3482
-# 3 sigma - 3456
-
 #mu, sigma = 3418.5636925, 12.58387389
-#import math
-
-#for i in range(1, 11):
-#    start = time.time()
-#    threshold = math.ceil(mu + i * sigma)
-#    galaxy_count = pk.GalaxyCount(data,threshold)
-#    galaxy_count.count_galaxies()
-#    end = time.time()
-#    print("time: ")
-#    print(end - start)
-#    print(len(galaxy_count.background_intensities))
-#    print(len(galaxy_count.galactic_intensities))
-#    np.save("centres_"+str(i)+"sigma", galaxy_count.centres)
-#    np.save("background_intensities_"+str(i)+"sigma", galaxy_count.background_intensities)
-#    np.save("galactic_intensities_"+str(i)+"sigma", galaxy_count.galactic_intensities)
-#    np.save("final_img_"+str(i)+"sigma", galaxy_count.data)
-
+#i=5
 #plt.figure()
 #plt.imshow(data)
 #start = time.time()
@@ -138,6 +118,9 @@ print(end - start)
 #print(end - start)
 #print(len(galaxy_count.background_intensities))
 #print(len(galaxy_count.galactic_intensities))
+#np.save("centres_"+str(i)+"sigma", galaxy_count.centres)
+#np.save("background_intensities_"+str(i)+"sigma", galaxy_count.background_intensities)
+#np.save("galactic_intensities_"+str(i)+"sigma", galaxy_count.galactic_intensities)
+#np.save("final_img_"+str(i)+"sigma", galaxy_count.data)
 #plt.figure()
 #plt.imshow(galaxy_count.data)
-
